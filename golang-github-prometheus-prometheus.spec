@@ -52,6 +52,7 @@ Summary:        The Prometheus monitoring system and time series database
 License:        ASL 2.0
 URL:            https://%{provider_prefix}
 Source0:	https://github.com/prometheus/prometheus/archive/v%{version}.tar.gz
+Provides:	prometheus = %{EVRD}
 
 # If go_compiler is not set to 1, there is no virtual provide. Use golang instead.
 BuildRequires:  %{?go_compiler:compiler(go-compiler)}%{!?go_compiler:golang}
