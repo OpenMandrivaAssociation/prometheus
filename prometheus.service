@@ -1,0 +1,23 @@
+[Unit]
+Description=Prometheus, a Cloud Native Computing Foundation project
+Documentation=https://prometheus.io/docs/introduction/getting_started/
+After=network.target
+
+[Service]
+Type=simple
+NotifyAccess=all
+EnvironmentFile=-/etc/sysconfig/prometheus
+ExecStart=/usr/bin/prometheus \
+	$DEFAULT_YML \
+	$DATA_PATH \
+	$STORAGE_RETENTION \
+	$STORAGE_NO_LOCKFILE \
+	$OPTIONS
+
+ExecReload=/bin/kill -s HUP $MAINPID
+TimeoutStartSec=0
+Restart=on-abnormal
+User=prometheus
+
+[Install]
+WantedBy=multi-user.target

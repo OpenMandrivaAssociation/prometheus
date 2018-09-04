@@ -43,7 +43,7 @@
 %global commit          3569eef8b1bc062bb5df43181b938277818f365b
 %global shortcommit     %(c=%{commit}; echo ${c:0:7})
 
-Name:           golang-%{provider}-%{project}-%{repo}
+Name:    	%{repo}
 Version:        2.3.2
 Release:        1
 Summary:        The Prometheus monitoring system and time series database
@@ -52,7 +52,11 @@ Summary:        The Prometheus monitoring system and time series database
 License:        ASL 2.0
 URL:            https://%{provider_prefix}
 Source0:	https://github.com/prometheus/prometheus/archive/v%{version}.tar.gz
+Source1:	%{name}.yml
+Source2:	%{name}.conf
+Source3:	%{name}.service
 Provides:	prometheus = %{EVRD}
+Provides:	golang-%{provider}-%{project}-%{repo}
 
 # If go_compiler is not set to 1, there is no virtual provide. Use golang instead.
 BuildRequires:  %{?go_compiler:compiler(go-compiler)}%{!?go_compiler:golang}
@@ -347,6 +351,9 @@ export GOPATH=$(pwd):%{gopath}
 install -d -p %{buildroot}%{_bindir}
 install -p -m 0755 bin/cmd/prometheus %{buildroot}%{_bindir}
 install -p -m 0755 bin/cmd/promtool %{buildroot}%{_bindir}
+install -D -p -m 0644 %{SOURCE3} %{buildroot}%{_unitdir}/%{name}.service
+install -D -p -m 0644 %{SOURCE2} %{buildroot}%{_sysconfdir}/sysconfig/prometheus
+install -D -p -m 0644 %{SOURCE1} %{buildroot}%{_sysconfdir}/%{name}/%{name}.yml
 
 # source codes for building projects
 %if 0%{?with_devel}
@@ -444,9 +451,29 @@ export GOPATH=%{buildroot}/%{gopath}:$(pwd)/vendor:%{gopath}
 #define license tag if not already defined
 %{!?_licensedir:%global license %doc}
 
+
+%pre
+getent group prometheus >/dev/null || groupadd -r prometheus
+getent passwd prometheus >/dev/null || \
+  useradd -r -g prometheus -s /sbin/nologin \
+    -d /var/lib/prometheus/ -c "prometheus daemon" prometheus
+exit 0
+
+%post
+%systemd_post %{name}.service
+
+%preun
+%systemd_preun %{name}.service
+
+%postun
+%systemd_postun_with_restart %{name}.service
+
 %files
 %{_bindir}/prometheus
 %{_bindir}/promtool
+%{_unitdir}/%{name}.service
+%config(noreplace) %{_sysconfdir}/%{name}/prometheus.yml
+%config(noreplace) %{_sysconfdir}/sysconfig/prometheus
 
 %if 0%{?with_devel}
 %files devel -f devel.file-list
