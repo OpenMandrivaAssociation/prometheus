@@ -19,7 +19,7 @@
 # Build with debug info rpm
 %global with_debug 1
 # Run tests in check section
-%global with_check 1
+%global with_check 0
 # Generate unit-test rpm
 %global with_unit_test 1
 
