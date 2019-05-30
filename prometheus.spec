@@ -356,6 +356,8 @@ install -D -p -m 0644 %{SOURCE3} %{buildroot}%{_unitdir}/%{name}.service
 install -D -p -m 0644 %{SOURCE2} %{buildroot}%{_sysconfdir}/sysconfig/prometheus
 install -D -p -m 0644 %{SOURCE1} %{buildroot}%{_sysconfdir}/%{name}/%{name}.yml
 
+mkdir -vp %{buildroot}%{_sharedstatedir}/%{name}
+
 # source codes for building projects
 %if 0%{?with_devel}
 install -d -p %{buildroot}/%{gopath}/src/%{import_path}/
@@ -475,6 +477,7 @@ exit 0
 %{_unitdir}/%{name}.service
 %config(noreplace) %{_sysconfdir}/%{name}/prometheus.yml
 %config(noreplace) %{_sysconfdir}/sysconfig/prometheus
+%attr(755, %{name}, %{name})%{_sharedstatedir}/%{name}
 
 %if 0%{?with_devel}
 %files devel -f devel.file-list
