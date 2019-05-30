@@ -44,8 +44,8 @@
 %global shortcommit     %(c=%{commit}; echo ${c:0:7})
 
 Name:    	%{repo}
-Version:        2.4.3
-Release:        2
+Version:        2.10.0
+Release:        1
 Summary:        The Prometheus monitoring system and time series database
 # Detected licences
 # - *No copyright* Apache (v2.0) GENERATED FILE at 'LICENSE'
@@ -332,6 +332,7 @@ providing packages with %{import_path} prefix.
 
 %prep
 %setup -qn %{repo}-%{version}
+rm -f go.mod
 
 %build
 mkdir -p src/%{provider}.%{provider_tld}/%{project}
