@@ -44,7 +44,7 @@
 %global shortcommit     %(c=%{commit}; echo ${c:0:7})
 
 Name:    	%{repo}
-Version:	2.18.1
+Version:	2.19.0
 Release:	1
 Summary:        The Prometheus monitoring system and time series database
 # Detected licences
