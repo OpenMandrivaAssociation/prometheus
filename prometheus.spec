@@ -45,7 +45,7 @@
 
 Name:    	%{repo}
 Version:	2.22.2
-Release:	2
+Release:	3
 Summary:        The Prometheus monitoring system and time series database
 # Detected licences
 # - *No copyright* Apache (v2.0) GENERATED FILE at 'LICENSE'
